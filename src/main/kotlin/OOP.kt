@@ -53,6 +53,13 @@ abstract class ComputerPart(val name: String){
 class CPU(name : String): ComputerPart(name)
 class GPU(name : String): ComputerPart(name)
 
+// Sealed class
+sealed class OS(val name: String){
+    class Linux(name : String): OS(name)
+    class Windows(name : String): OS(name)
+    class Mac(name : String): OS(name)
+}
+
 interface MovieApiService{
     fun getAllMovies(): List<String>
     fun getSingleMovie(movieId: Int): String
@@ -76,7 +83,6 @@ class MovieApiServiceImpl: MovieApiService{
 class Company{
     val name: String
     val employees: Int
-
     constructor(name: String, employees: Int,){
         this.name = name
         this.employees = employees
@@ -132,10 +138,31 @@ fun main(){
     println(gpu)
     gpu.assemble()
 
+    val ryzen55600 : ComputerPart = CPU("Ryzen 5 5600")
+    when (ryzen55600) {
+        is CPU -> println("It's a CPU")
+        is GPU -> println("It's a GPU")
+        else -> println("Unknown Computer Part")
+    }
+
     val movieApiService : MovieApiService = MovieApiServiceImpl()
 
     println(movieApiService.getAllMovies())
     println(movieApiService.getSingleMovie(1))
+
+
+    val  windows11 : OS = OS.Windows(name = "Windows11")
+    when(windows11){
+        is OS.Linux -> {
+            println("This is Linux")
+        }
+        is OS.Mac -> {
+            println("This is Mac")
+        }
+        is OS.Windows -> {
+            println("This is Windows")
+        }
+    }
 
 
 }
@@ -146,3 +173,12 @@ data class HomeScreenState(
     val isLoading: Boolean = false,
     val error : String = ""
 )
+
+
+sealed class  Actions{
+    data class OnEmailChange(val email: String): Actions()
+    data class OnPasswordChange(val password: String): Actions()
+    class OnLoginTapped() : Actions()
+    class OnRegisterTapped() : Actions()
+}
+
